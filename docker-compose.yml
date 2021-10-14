@@ -1,0 +1,42 @@
+version: "3.3"
+services:
+    flask:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        image: repo/movies-backend:1
+        working_dir: /opt/api/
+        command: bash run.sh
+        ports:
+            - 5000:5000
+        volumes:
+            - ./api/:/opt/api/
+        stdin_open: true
+        tty: true
+        env_file:
+            - ./.env
+        depends_on:
+            - mongo
+        expose:
+            - 5000
+        links:
+            - mongo
+    mongo:
+        image: docker.io/mongo:latest
+        ports:
+            - 27017:27017
+        env_file:
+            - ./.env
+        volumes:
+            - ./data/mongo:/data/db
+    node:
+        image: node:latest
+        volumes:
+            - ./frontend:/opt/frontend
+        working_dir: /opt/frontend
+    nginx:
+        image: nginx:latest
+        volumes:
+            - ./frontend/build:/usr/share/nginx/html
+        ports:
+            - 8080:80
