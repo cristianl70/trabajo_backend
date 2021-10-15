@@ -70,3 +70,67 @@ def delete(codigo):
         print("Conexion cerrada")
 
 ###################################################################################
+
+@app.route("/profesional/<codigo>", methods=['GET'])
+def get_iniciosesion(codigo):
+    con = db.get_connection()
+    dbini = con.dbiniciosesion
+    try:
+        inicio = dbini.inicio
+        retorno = dumps(inicio.find_one({'_id': ObjectId(codigo)}))
+        return jsonify(retorno)
+    finally:
+        con.close()
+        print("Conexion cerrada")
+
+@app.route("/profesional", methods=['GET'])
+def get_inicio():
+    con = db.get_connection()
+    dbini = con.dbiniciosesion
+    try:
+        inicio = dbini.inicio
+        retorno = dumps(inicio.find())
+        return jsonify(retorno)
+    finally:
+        con.close()
+        print("Conexion cerrada")
+
+
+@app.route("/profesional", methods=['POST'])
+def createinicio():
+    data = request.get_json()
+    con = db.get_connection()
+    dbini = con.dbiniciosesion
+    try:
+        inicio = dbini.inicio
+        inicio.insert(data)
+        
+        return jsonify({"Profesional":"Logueado exitosamente"})
+    finally:
+        con.close()
+        print("Conexion cerrada")
+
+@app.route("/profesional/<codigo>", methods=['PUT'])
+def updateinicio(codigo):
+    data = request.get_json()
+    con = db.get_connection()
+    dbini = con.dbiniciosesion
+    try:
+        inicio = dbini.inicio
+        inicio.update({'_id': ObjectId(codigo)}, data) 
+        return jsonify({"Profesional":"Actualizado exitosamente"})
+    finally:
+        con.close()
+        print("Conexion cerrada")
+
+@app.route("/profesional/<codigo>", methods=['DELETE'])
+def deleteinicio(codigo):
+    con = db.get_connection()
+    dbini = con.dbiniciosesion
+    try:
+        inicio = dbini.inicio
+        inicio.delete_one({'_id': ObjectId(codigo)})
+        return jsonify({"Profesional":"Eliminado exitosamente"})
+    finally:
+        con.close()
+        print("Conexion cerrada")
