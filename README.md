@@ -1,4 +1,4 @@
-#Procedimiento para ejecutar el script
+# Procedimiento para ejecutar el script
 
 * Clonar el repositorio utilizando visual studio
   - git clone https://github.com/cristianl70/trabajo_backend.git
