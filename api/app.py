@@ -5,66 +5,68 @@ import db
 
 app = Flask(__name__)
 
-@app.route("/cargos/<codigo>", methods=['GET'])
-def get_cargo(codigo):
+@app.route("/ingreso-paciente/<codigo>", methods=['GET'])
+def get_paciente(codigo):
     con = db.get_connection()
-    dbemp = con.dbempleados
+    dbpac = con.dbpacientes
     try:
-        cargos = dbemp.cargos
-        retorno = dumps(cargos.find_one({'_id': ObjectId(codigo)}))
+        pacientes = dbpac.pacientes
+        retorno = dumps(pacientes.find_one({'_id': ObjectId(codigo)}))
         return jsonify(retorno)
     finally:
         con.close()
         print("Conexion cerrada")
 
-@app.route("/cargos", methods=['GET'])
-def get_cargos():
+@app.route("/ingreso-paciente", methods=['GET'])
+def get_pacientes():
     con = db.get_connection()
-    dbemp = con.dbempleados
+    dbpac = con.dbpacientes
     try:
-        cargos = dbemp.cargos
-        retorno = dumps(cargos.find())
+        pacientes = dbpac.pacientes
+        retorno = dumps(pacientes.find())
         return jsonify(retorno)
     finally:
         con.close()
         print("Conexion cerrada")
 
-@app.route("/cargos", methods=['POST'])
+@app.route("/ingreso-paciente", methods=['POST'])
 def create():
     data = request.get_json()
-    nombre = data['nombre']
     con = db.get_connection()
-    dbemp = con.dbempleados
+    dbpac = con.dbpacientes
     try:
-        cargos = dbemp.cargos
-        cargos.insert({"nombre":nombre})
-        return jsonify({"mensaje":"OK"})
+        pacientes = dbpac.pacientes
+        pacientes.insert(data)
+        
+        return jsonify({"Paciente":"Creado exitosamente"})
     finally:
         con.close()
         print("Conexion cerrada")
 
-@app.route("/cargos/<codigo>", methods=['PUT'])
+@app.route("/ingreso-paciente/<codigo>", methods=['PUT'])
 def update(codigo):
     data = request.get_json()
-    nombre = data['nombre']
+    #nombre = data['nombre']
     con = db.get_connection()
-    dbemp = con.dbempleados
+    dbpac = con.dbpacientes
     try:
-        cargos = dbemp.cargos
-        cargos.update({'_id': ObjectId(codigo)}, {"nombre": nombre}) 
-        return jsonify({"mensaje":"OK"})
+        pacientes = dbpac.pacientes
+        pacientes.update({'_id': ObjectId(codigo)}, data) 
+        return jsonify({"Paciente":"Actualizado exitosamente"})
     finally:
         con.close()
         print("Conexion cerrada")
 
-@app.route("/cargos/<codigo>", methods=['DELETE'])
+@app.route("/ingreso-paciente/<codigo>", methods=['DELETE'])
 def delete(codigo):
     con = db.get_connection()
-    dbemp = con.dbempleados
+    dbpac = con.dbpacientes
     try:
-        cargos = dbemp.cargos
-        cargos.delete_one({'_id': ObjectId(codigo)})
-        return jsonify({"mensaje":"OK"})
+        pacientes = dbpac.pacientes
+        pacientes.delete_one({'_id': ObjectId(codigo)})
+        return jsonify({"Paciente":"Eliminado exitosamente"})
     finally:
         con.close()
         print("Conexion cerrada")
+
+###################################################################################
